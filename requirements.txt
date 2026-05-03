@@ -1,0 +1,3 @@
+alive-progress
+piexif
+questionary>=2.0.0
