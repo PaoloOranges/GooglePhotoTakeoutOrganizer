@@ -6,6 +6,7 @@ import re
 from collections import defaultdict
 from alive_progress import alive_bar
 import questionary
+from questionary import Choice
 
 def filter_only_media_files(f, accepted_extensions):
     _, ext = os.path.splitext(f)
@@ -23,16 +24,18 @@ def get_selected_extensions(stats):
     if not stats:
         return set()
     
-    # Create choices
+    # Create choices with pre-selection
     choices = []
     excluded_extensions = {".json", ".html"}
     
     for ext in sorted(stats.keys()):
         count = stats[ext]
         label = f"{ext} ({count} files)"
-        choices.append(label)
+        # Pre-select all extensions except those in excluded_extensions
+        is_checked = ext not in excluded_extensions
+        choices.append(Choice(label, checked=is_checked))
     
-    # Display interactive checkbox menu
+    # Display interactive checkbox menu with pre-selected extensions
     selected_labels = questionary.checkbox(
         'Select file extensions to include:',
         choices=choices
